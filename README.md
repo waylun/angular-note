@@ -201,7 +201,7 @@ export class App implements OnInit {
 
 ## Component Interaction
 
-1. Parent -> Child 
+1. Parent ---> Child 
 ```javascript
 import { Component, Input } from '@angular/core';
  
@@ -239,7 +239,7 @@ export class HeroParentComponent {
   master = 'Master';
 }
 ```
-2. Parent <- Child
+2. Parent <--- Child
 ```javascript
 import { Component, EventEmitter, Input, Output } from '@angular/core';
  
@@ -286,21 +286,184 @@ export class VoteTakerComponent {
   }
 }
 ```
+3. Parent ---> Child (Local Variable)
+```javascript
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
-Observables & RxJS
-Module & Routing
-Unit Test 
+@Component({
+  selector: 'app-countdown-timer',
+  template: '<p>{{message}}</p>'
+})
+export class CountdownTimerComponent implements OnInit, OnDestroy {
 
-Git Commands
-Gitlab Flows
-Gitlab & CI/CD
+  intervalId = 0;
+  message = '';
+  seconds = 11;
 
-1.  
-2.
+  clearTimer() { clearInterval(this.intervalId); }
 
+  ngOnInit()    { this.start(); }
+  ngOnDestroy() { this.clearTimer(); }
+
+  start() { this.countDown(); }
+  stop()  {
+    this.clearTimer();
+    this.message = `Holding at T-${this.seconds} seconds`;
+  }
+
+  private countDown() {
+    this.clearTimer();
+    this.intervalId = window.setInterval(() => {
+      this.seconds -= 1;
+      if (this.seconds === 0) {
+        this.message = 'Blast off!';
+      } else {
+        if (this.seconds < 0) { this.seconds = 10; } // reset
+        this.message = `T-${this.seconds} seconds and counting`;
+      }
+    }, 1000);
+  }
+}
+```
+```javascript
+import { Component }                from '@angular/core';
+import { CountdownTimerComponent }  from './countdown-timer.component';
+
+@Component({
+  selector: 'app-countdown-parent-lv',
+  template: `
+  <h3>Countdown to Liftoff (via local variable)</h3>
+  <button (click)="timer.start()">Start</button>
+  <button (click)="timer.stop()">Stop</button>
+  <div class="seconds">{{timer.seconds}}</div>
+  <app-countdown-timer #timer></app-countdown-timer>
+  `,
+  styleUrls: ['../assets/demo.css']
+})
+export class CountdownLocalVarParentComponent { }
+```
+4. Parent <--- Child (@ViewChild())
+>The local variable approach is simple and easy. But it is limited because the parent-child wiring must be done entirely within the parent template. The parent component itself has no access to the child.
+
+>You can't use the local variable technique if an instance of the parent component class must read or write child component values or must call child component methods.
+
+>When the parent component class requires that kind of access, inject the child component into the parent as a ViewChild.
+
+```javascript
+import {Component} from 'angular2/core';
+
+@Component({
+    selector: 'my-child',
+    template: `
+        <div>Child Component</div>
+    `
+})
+export class ChildComponent {
+    name:string = 'childName';
+}
+```
+```javascript
+import {Component,ViewChild,AfterViewInit} from 'angular2/core';
+import {ChildComponent}         from './child';
+
+@Component({
+    selector: 'my-parent',
+    template: `
+       <div>Parent Component</div>
+       <my-child></my-child>
+    `,
+    directives:[ChildComponent]
+})
+export class ParentComponent implements AfterViewInit{
+    @ViewChild(ChildComponent)
+    private child:ChildComponent;
+
+    ngAfterViewInit() {
+        console.log(this.child)
+    }
+}
+```
+Parent <---> Child (Observables & RxJS)
+```javascript
+import { Injectable } from '@angular/core';
+import { Subject }    from 'rxjs';
+
+@Injectable()
+export class MissionService {
+
+  // Observable string sources
+  private missionAnnouncedSource = new Subject<string>();
+  private missionConfirmedSource = new Subject<string>();
+
+  // Observable string streams
+  missionAnnounced$ = this.missionAnnouncedSource.asObservable();
+  missionConfirmed$ = this.missionConfirmedSource.asObservable();
+
+  // Service message commands
+  announceMission(mission: string) {
+    this.missionAnnouncedSource.next(mission);
+  }
+
+  confirmMission(astronaut: string) {
+    this.missionConfirmedSource.next(astronaut);
+  }
+}
+```
+```javascript
+import { Component }          from '@angular/core';
+import { MissionService }     from './mission.service';
+
+@Component({
+  selector: 'app-mission-control',
+  template: `
+    <h2>Mission Control</h2>
+    <button (click)="announce()">Announce mission</button>
+    <app-astronaut *ngFor="let astronaut of astronauts"
+      [astronaut]="astronaut">
+    </app-astronaut>
+    <h3>History</h3>
+    <ul>
+      <li *ngFor="let event of history">{{event}}</li>
+    </ul>
+  `,
+  providers: [MissionService]
+})
+export class MissionControlComponent {
+  astronauts = ['Lovell', 'Swigert', 'Haise'];
+  history: string[] = [];
+  missions = ['Fly to the moon!',
+              'Fly to mars!',
+              'Fly to Vegas!'];
+  nextMission = 0;
+
+  constructor(private missionService: MissionService) {
+    missionService.missionConfirmed$.subscribe(
+      astronaut => {
+        this.history.push(`${astronaut} confirmed the mission`);
+      });
+  }
+
+  announce() {
+    let mission = this.missions[this.nextMission++];
+    this.missionService.announceMission(mission);
+    this.history.push(`Mission "${mission}" announced`);
+    if (this.nextMission >= this.missions.length) { this.nextMission = 0; }
+  }
+}
+```
+[View More about Subject](https://ithelp.ithome.com.tw/articles/10188677)
+
+## Others
+- Module
+- Route
+- Unit Test 
+- Git Commands
+- Gitlab Flows
+- CI/CD
+
+> Reference:
+https://angular.io/
+https://ithelp.ithome.com.tw/articles/10188861
 https://blog.johnwu.cc/article/angular-4-%E6%95%99%E5%AD%B8-data-binding.html
-
 https://ithelp.ithome.com.tw/articles/10195275
 https://ithelp.ithome.com.tw/m/articles/10194798
-
-[Google 首頁](https://google.com.tw)
