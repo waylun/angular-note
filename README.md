@@ -11,7 +11,7 @@
 | Interface     | ng g interface my-new-interface    | 
 | Enum          | ng g enum my-new-enum              | 
 | Module        | ng g module my-module              |
-| Route         | `ng g command` --routing             |
+| Route         | `ng g command` --routing           |
 
 | Scaffold         | Usage                    | 
 | ---------------- |:------------------------:| 
@@ -133,8 +133,51 @@ export class RadioCheckbox {
 <span Icheck>HEllo Directive</span>
 ```
 
-Pipes
-Lifecycle hooks
+## Pipes
+
+
+
+
+ - AsyncPipe：Uses for Observable or Promise return lastest value
+ - CurrencyPipe
+ - DatePipe
+ - DecimalPipe
+ - DeprecatedCurrencyPipe：Use currency to format a number as currency.
+ - DeprecatedDatePipe
+ - DeprecatedDecimalPipe
+ - DeprecatedPercentPipe
+ - I18nPluralPipe：Maps a value to a string that pluralizes the value according to locale rules.
+ - I18nSelectPipe：Generic selector that displays the string that matches the current value.
+ - JsonPipe：Converts value into JSON string.
+ - LowerCasePipe
+ - UpperCasePipe
+ - PercentPipe
+ - SlicePipe：Creates a new List or String containing a subset (slice) of the elements.
+ - TitleCasePipe：Transforms text to titlecase.
+
+ 
+ ```javascript
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-hero-birthday',
+  template: `<p>The hero's birthday is {{ birthday | date }}</p>`
+})
+export class HeroBirthdayComponent {
+  birthday = new Date(1988, 4, 15); // April 15, 1988
+}
+ ```
+ ```html
+ <p>The hero's birthday is {{ birthday | date:"MM/dd/yy" }} </p>
+ ```
+> MM/dd/yy：04/15/88
+```html
+{{ birthday | date:'fullDate' | uppercase}}
+```
+> FRIDAY, APRIL 15, 1988
+
+## Lifecycle hooks
+
 Component interaction
 Observables & RxJS
 Module & Routing
@@ -149,5 +192,6 @@ Gitlab & CI/CD
 
 https://blog.johnwu.cc/article/angular-4-%E6%95%99%E5%AD%B8-data-binding.html
 
+https://ithelp.ithome.com.tw/articles/10195275
 
 [Google 首頁](https://google.com.tw)
