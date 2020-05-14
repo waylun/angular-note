@@ -135,9 +135,6 @@ export class RadioCheckbox {
 
 ## Pipes
 
-
-
-
  - AsyncPipe：Uses for Observable or Promise return lastest value
  - CurrencyPipe
  - DatePipe
@@ -219,7 +216,7 @@ export class HeroChildComponent {
   @Input('master') masterName: string;
 }
 ```
-```javascript=
+```javascript
 import { Component } from '@angular/core';
  
 import { HEROES } from './hero';
@@ -453,6 +450,7 @@ export class MissionControlComponent {
 ```
 [View More about Subject](https://ithelp.ithome.com.tw/articles/10188677)
 
+
 ## Others
 - Module
 - Route
@@ -461,9 +459,9 @@ export class MissionControlComponent {
 - Gitlab Flows
 - CI/CD
 
-> Reference:
-https://angular.io/
-https://ithelp.ithome.com.tw/articles/10188861
-https://blog.johnwu.cc/article/angular-4-%E6%95%99%E5%AD%B8-data-binding.html
-https://ithelp.ithome.com.tw/articles/10195275
-https://ithelp.ithome.com.tw/m/articles/10194798
+> Reference:  
+https://angular.io/  
+https://ithelp.ithome.com.tw/articles/10188861  
+https://blog.johnwu.cc/article/angular-4-%E6%95%99%E5%AD%B8-data-binding.html  
+https://ithelp.ithome.com.tw/articles/10195275  
+https://ithelp.ithome.com.tw/m/articles/10194798  
