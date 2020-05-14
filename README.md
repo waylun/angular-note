@@ -1,4 +1,4 @@
-# Angular Note
+# Angular Notes
 ## Angular CLI
 
 | Scaffold      | Usage                              | 
@@ -176,9 +176,117 @@ export class HeroBirthdayComponent {
 ```
 > FRIDAY, APRIL 15, 1988
 
-## Lifecycle hooks
+## Lifecycle Hooks
 
-Component interaction
+1. ngOnChanges()	
+2. ngOnInit()
+3. ngAfterViewInit()	
+4. ngOnDestroy()	
+
+
+> What is different between Constructor and ngOnInit: The constructor of the component is called when Angular constructs components tree. All lifecycle hooks are called as part of running change detection.
+
+
+```javascript
+export class App implements OnInit {
+  constructor() {
+     // Called first time before the ngOnInit()
+  }
+
+  ngOnInit() {
+     // Called after the constructor and called  after the first ngOnChanges() 
+  }
+}
+```
+
+## Component Interaction
+
+1. Parent -> Child 
+```javascript
+import { Component, Input } from '@angular/core';
+ 
+import { Hero } from './hero';
+ 
+@Component({
+  selector: 'app-hero-child',
+  template: '
+    <h3>{{hero.name}} says:</h3>
+    <p>I, {{hero.name}}, am at your service, {{masterName}}.</p>
+  '
+})
+export class HeroChildComponent {
+  @Input() hero: Hero;
+  @Input('master') masterName: string;
+}
+```
+```javascript=
+import { Component } from '@angular/core';
+ 
+import { HEROES } from './hero';
+ 
+@Component({
+  selector: 'app-hero-parent',
+  template: '
+    <h2>{{master}} controls {{heroes.length}} heroes</h2>
+    <app-hero-child *ngFor="let hero of heroes"
+      [hero]="hero"
+      [master]="master">
+    </app-hero-child>
+  '
+})
+export class HeroParentComponent {
+  heroes = HEROES;
+  master = 'Master';
+}
+```
+2. Parent <- Child
+```javascript
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+ 
+@Component({
+  selector: 'app-voter',
+  template: '
+    <h4>{{name}}</h4>
+    <button (click)="vote(true)"  [disabled]="voted">Agree</button>
+    <button (click)="vote(false)" [disabled]="voted">Disagree</button>
+  '
+})
+export class VoterComponent {
+  @Input()  name: string;
+  @Output() onVoted = new EventEmitter<boolean>();
+  voted = false;
+ 
+  vote(agreed: boolean) {
+    this.onVoted.emit(agreed);
+    this.voted = true;
+  }
+}
+```
+```javascript
+import { Component }      from '@angular/core';
+ 
+@Component({
+  selector: 'app-vote-taker',
+  template: '
+    <h2>Should mankind colonize the Universe?</h2>
+    <h3>Agree: {{agreed}}, Disagree: {{disagreed}}</h3>
+    <app-voter *ngFor="let voter of voters"
+      [name]="voter"
+      (onVoted)="onVoted($event)">
+    </app-voter>
+  '
+})
+export class VoteTakerComponent {
+  agreed = 0;
+  disagreed = 0;
+  voters = ['Mr. IQ', 'Ms. Universe', 'Bombasto'];
+ 
+  onVoted(agreed: boolean) {
+    agreed ? this.agreed++ : this.disagreed++;
+  }
+}
+```
+
 Observables & RxJS
 Module & Routing
 Unit Test 
@@ -193,5 +301,6 @@ Gitlab & CI/CD
 https://blog.johnwu.cc/article/angular-4-%E6%95%99%E5%AD%B8-data-binding.html
 
 https://ithelp.ithome.com.tw/articles/10195275
+https://ithelp.ithome.com.tw/m/articles/10194798
 
 [Google 首頁](https://google.com.tw)
