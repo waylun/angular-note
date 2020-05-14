@@ -20,7 +20,6 @@
 | End-to-End tests | ng e2e                   | 
 | TSLint           | ng lint                  | 
 | Custom Scripts   | npm run `custom-scripts` | 
---- 
 
 ## Data-Binding
 
@@ -78,32 +77,62 @@ export class AppComponent {
 <button [style.color]="isSpecial ? 'red' : 'green'">
 ```
 
+- Event Binding
 
+```javascript
+export class AppComponent {
+    onClick(value: string): void {
+        console.log("Hello " + value);
+    }
+}
+```
+```html
+<button (click)="onClick('World')">Font color</button>
+```
+- Two-way Data Binding
+```html
+<input [(ngModel)]="name" />
+```
+```javascript
+import { NgModule } from '@angular/core'
+import { BrowserModule } from '@angular/platform-browser'
+import { FormsModule } from '@angular/forms'
 
+import { AppComponent } from './app.component'
 
+@NgModule({
+  imports: [BrowserModule, FormsModule],
+  declarations: [AppComponent],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+```
+```html
+<input [ngModel]="name" (ngModelChange)="name = $event" />
+```
+[Example](https://blog.johnwu.cc/images/a/196.gif)
 
+## Directive
+1. Components — directives with a template.
+2. Structural directives — change the DOM layout by adding and removing DOM elements.
+> [ngClass]="condition"
+3. Attribute directives — change the appearance or behavior of an element, component, or another directive.
+> *ngIf, *ngFor…
 
+```javascript
+import {Directive, ElementRef, Renderer, Input} from '@angular/core';
 
+@Directive({
+  selector: '[Icheck]',
+})
+export class RadioCheckbox {
+   // custom logic here...
+}
+```
+```html
+<span Icheck>HEllo Directive</span>
+```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
->
--
-
-
-Data-Binding
-Directive
 Pipes
 Lifecycle hooks
 Component interaction
@@ -117,5 +146,8 @@ Gitlab & CI/CD
 
 1.  
 2.
+
+https://blog.johnwu.cc/article/angular-4-%E6%95%99%E5%AD%B8-data-binding.html
+
 
 [Google 首頁](https://google.com.tw)
