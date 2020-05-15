@@ -456,7 +456,7 @@ export class MissionControlComponent {
 - Route
 - Unit Test 
 - Git Commands
-- Gitlab Flows
+- Gitlab
 
 > Reference:  
 https://angular.io/  
