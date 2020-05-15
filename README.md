@@ -457,7 +457,6 @@ export class MissionControlComponent {
 - Unit Test 
 - Git Commands
 - Gitlab Flows
-- CI/CD
 
 > Reference:  
 https://angular.io/  
